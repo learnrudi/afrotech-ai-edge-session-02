@@ -488,8 +488,8 @@
 <section class="s-title" data-screen-label="01 Title">
   <div class="meta-row">
     <div class="stamp">
-      <span><b>AFROTECH</b> — AI EDGE VIRTUAL SUMMIT</span>
-      <span>SESSION 02 / 04</span>
+      <span><b>AFROTECH</b> — AI EDGE TRAINING SERIES</span>
+      <span>SESSION 02</span>
     </div>
     <div class="stamp" style="text-align: right; align-items: flex-end;">
       <span>2026 · 60 MIN</span>
@@ -502,7 +502,7 @@
     <div class="lockup">
       <span class="ai">AI</span><span>EDGE.</span>
     </div>
-    <div class="summit">Virtual Summit · Session 02</div>
+    <div class="summit">Training Series · Session 02</div>
     <div style="font-size: 38px; font-weight: 500; letter-spacing: -0.02em; margin-top: 16px; max-width: 1100px; line-height: 1.2;">
       AI for People Leaders — <span style="color: var(--ink-3);">Evolve Your Team's Workflows.</span>
     </div>
@@ -1331,7 +1331,12 @@
 
 <script>
 (function() {
-  const STORAGE_KEY = 'rudi-deck-edits-v2';
+  const STORAGE_KEY = 'rudi-deck-edits-v3-session-02-people-leaders';
+  const LEGACY_STORAGE_KEYS = ['rudi-deck-edits-v2'];
+
+  try {
+    LEGACY_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
+  } catch (e) {}
 
   // Smart text-leaf detector: find every visible element whose direct content
   // is text (or simple inline formatting) — i.e., the actual text-bearing leaves
@@ -1373,10 +1378,28 @@
     return Array.from(all).filter(isTextLeaf);
   }
 
-  // Stable IDs so we can map edits back after refresh.
+  function slug(value) {
+    return String(value || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 64);
+  }
+
+  function elementId(el, fallbackIndex) {
+    const slide = el.closest('section');
+    const slideLabel = slide ? slug(slide.dataset.screenLabel || slide.getAttribute('data-screen-label') || 'slide') : 'deck';
+    const slideTextEls = slide ? Array.from(slide.querySelectorAll('*')).filter(isTextLeaf) : elements();
+    const localIndex = Math.max(0, slideTextEls.indexOf(el));
+    const role = slug([el.tagName.toLowerCase(), Array.from(el.classList || []).join('-')].filter(Boolean).join('-')) || 'text';
+    return `${slideLabel}-${String(localIndex).padStart(2, '0')}-${role || fallbackIndex}`;
+  }
+
+  // Stable IDs so we can map edits back after refresh without relying on
+  // page-wide element order, which changes when slides are added or removed.
   function ensureIds() {
     elements().forEach((el, i) => {
-      if (!el.dataset.edId) el.dataset.edId = 'ed-' + i;
+      if (!el.dataset.edId || /^ed-\d+$/.test(el.dataset.edId)) el.dataset.edId = elementId(el, i);
       el.setAttribute('data-editable', '');
     });
   }
@@ -1454,6 +1477,7 @@
   resetBtn.addEventListener('click', () => {
     if (!confirm('Reset all edits? This will reload the original deck.')) return;
     localStorage.removeItem(STORAGE_KEY);
+    LEGACY_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
     location.reload();
   });
 

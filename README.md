@@ -24,7 +24,7 @@ The deck has a built-in editor. To change any wording:
 
 - **Arrow keys** (← →) — previous / next slide
 - **R** — reset to slide 1
-- **Slide 1 of 16** indicator at the bottom — click to jump
+- **Slide 1 of 15** indicator at the bottom — click to jump
 
 ## Folder structure
 
