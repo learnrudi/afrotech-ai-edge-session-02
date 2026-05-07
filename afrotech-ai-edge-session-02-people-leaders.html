@@ -1,0 +1,1516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>AI Edge — Session 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="assets/js/deck-stage.js"></script>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --paper: #ffffff;
+    --ink: #15101d;
+    --ink-2: #4a4254;
+    --ink-3: #8c8597;
+    --rule: #e8e3da;
+    --rule-2: #d8d2c5;
+    --purple: #5b27a8;
+    --purple-deep: #2b0f55;
+    --purple-soft: #efe7fb;
+    --lime: #d6eb88;
+    --lime-deep: #b8d05c;
+    --red: #b8362e;
+    --amber: #c98a1a;
+    --green: #2f7a4a;
+
+    --slide-pad-x: 110px;
+    --slide-pad-y: 90px;
+  }
+
+  html, body { margin: 0; background: #000; color: var(--ink); font-family: "Geist", system-ui, sans-serif; }
+  deck-stage { background: #000; }
+  deck-stage > section {
+    background: var(--bg);
+    color: var(--ink);
+    padding: var(--slide-pad-y) var(--slide-pad-x);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    font-feature-settings: "ss01", "cv11";
+    letter-spacing: -0.005em;
+  }
+
+  /* Universal chrome — page number + session crumb */
+  .crumb {
+    position: absolute; left: var(--slide-pad-x); top: 56px;
+    font-family: "Geist Mono", monospace;
+    font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .crumb .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); display: inline-block; }
+  .pgnum {
+    position: absolute; right: var(--slide-pad-x); top: 56px;
+    font-family: "Geist Mono", monospace;
+    font-size: 14px; letter-spacing: 0.14em; color: var(--ink-3);
+  }
+  .footnote {
+    position: absolute; left: var(--slide-pad-x); bottom: 56px;
+    font-family: "Geist Mono", monospace;
+    font-size: 13px; letter-spacing: 0.1em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .footmark {
+    position: absolute; right: var(--slide-pad-x); bottom: 56px;
+    font-family: "Geist Mono", monospace;
+    font-size: 13px; letter-spacing: 0.1em; color: var(--ink-3);
+  }
+
+  h1, h2, h3 { margin: 0; font-weight: 600; letter-spacing: -0.02em; }
+  p { margin: 0; }
+
+  .eyebrow {
+    font-family: "Geist Mono", monospace;
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .display {
+    font-size: 132px; font-weight: 600; line-height: 0.95; letter-spacing: -0.04em;
+  }
+  .h1 { font-size: 84px; font-weight: 600; line-height: 1.02; letter-spacing: -0.03em; }
+  .h2 { font-size: 56px; font-weight: 600; line-height: 1.05; letter-spacing: -0.025em; }
+  .h3 { font-size: 36px; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+  .body { font-size: 24px; line-height: 1.45; color: var(--ink-2); font-weight: 400; }
+  .body-sm { font-size: 20px; line-height: 1.5; color: var(--ink-2); }
+  .micro { font-family: "Geist Mono", monospace; font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
+
+  .lime { background: var(--lime); }
+  .purple-ink { color: var(--purple); }
+  .purple-bg { background: var(--purple); color: #fff; }
+  .deep-bg { background: var(--purple-deep); color: #fff; }
+
+  .rule { height: 1px; background: var(--rule); width: 100%; }
+
+  /* Pill */
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 999px; background: var(--purple-soft); color: var(--purple);
+    font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ===== Slide 1: Title ===== */
+  .s-title { display: flex; flex-direction: column; justify-content: space-between; }
+  .s-title .meta-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .s-title .stamp {
+    display: inline-flex; flex-direction: column; gap: 4px;
+    font-family: "Geist Mono", monospace; font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .s-title .stamp b { color: var(--ink); font-weight: 500; letter-spacing: 0.14em; }
+  .s-title .hero {
+    display: flex; flex-direction: column; gap: 32px;
+  }
+  .s-title .welcome {
+    font-family: "Geist Mono", monospace; font-size: 16px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-3);
+  }
+  .s-title .lockup {
+    display: flex; align-items: baseline; gap: 32px;
+    font-size: 280px; font-weight: 700; letter-spacing: -0.05em; line-height: 0.85;
+  }
+  .s-title .lockup .ai { color: var(--purple); }
+  .s-title .summit {
+    display: inline-flex; align-items: center; padding: 18px 36px;
+    background: var(--lime); color: var(--purple-deep);
+    font-family: "Geist Mono", monospace; font-weight: 500;
+    font-size: 22px; letter-spacing: 0.24em; text-transform: uppercase;
+    border-radius: 6px;
+    width: fit-content;
+  }
+  .s-title .speaker {
+    display: flex; align-items: center; gap: 24px;
+  }
+  .s-title .avatar {
+    width: 88px; height: 88px; border-radius: 50%;
+    background: linear-gradient(135deg, #2b0f55 0%, #5b27a8 60%, #d6eb88 140%);
+    border: 1px solid var(--rule-2);
+    flex-shrink: 0;
+  }
+  .s-title .speaker-meta { display: flex; flex-direction: column; gap: 4px; }
+  .s-title .speaker-meta .name { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+  .s-title .speaker-meta .role { font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+
+  /* ===== Slide 2: 3Cs ===== */
+  .s-3c .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 48px; border-top: 1px solid var(--rule); }
+  .s-3c .col { padding: 32px 36px 32px 0; border-right: 1px solid var(--rule); display: flex; flex-direction: column; gap: 20px; min-height: 380px; }
+  .s-3c .col:last-child { border-right: none; padding-right: 0; }
+  .s-3c .col:not(:first-child) { padding-left: 36px; }
+  .s-3c .col .num {
+    font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .s-3c .col .label { font-size: 48px; font-weight: 600; letter-spacing: -0.02em; }
+  .s-3c .col .label .accent { color: var(--purple); }
+  .s-3c .col .desc { font-size: 19px; line-height: 1.55; color: var(--ink-2); }
+  .s-3c .col .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+  .s-3c .col .tags span {
+    font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 10px; border: 1px solid var(--rule-2); border-radius: 999px; color: var(--ink-2);
+  }
+  .s-3c .takeaway {
+    margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--rule);
+    display: flex; align-items: baseline; gap: 24px;
+  }
+  .s-3c .takeaway .marker {
+    font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--purple);
+  }
+  .s-3c .takeaway p { font-size: 22px; line-height: 1.4; max-width: 1100px; color: var(--ink); font-weight: 400; }
+
+  /* ===== Slide 3: 3 platforms ===== */
+  .s-platforms .platforms {
+    margin-top: 52px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  }
+  .s-platforms .plat {
+    border: 1px solid var(--rule); border-radius: 8px; padding: 40px 44px;
+    background: var(--paper); aspect-ratio: 1.42 / 1;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .s-platforms .plat .num { font-family: "Geist Mono", monospace; font-size: 14px; letter-spacing: 0.18em; color: var(--ink-3); }
+  .s-platforms .plat .name { font-size: 64px; font-weight: 600; letter-spacing: -0.03em; }
+  .s-platforms .plat .tag { font-family: "Geist Mono", monospace; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .s-platforms .copilot-strip {
+    margin-top: 28px; padding: 20px 28px; background: var(--paper); border: 1px solid var(--rule); border-radius: 8px;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .s-platforms .copilot-strip .lead {
+    font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--purple); flex-shrink: 0;
+  }
+  .s-platforms .copilot-strip p { font-size: 18px; line-height: 1.35; color: var(--ink); }
+  .s-platforms .copilot-strip strong { color: var(--purple); font-weight: 600; }
+
+  /* ===== Slides 4–6: vendor stack ===== */
+  .s-stack { display: grid; grid-template-columns: 1.05fr 1fr; gap: 80px; align-items: start; }
+  .s-stack .left { display: flex; flex-direction: column; gap: 28px; max-width: 720px; }
+  .s-stack .vendor-tag { display: inline-flex; align-items: center; gap: 10px; }
+  .s-stack .vendor-tag .pip { width: 10px; height: 10px; border-radius: 50%; }
+  .s-stack .vendor-name { font-size: 96px; font-weight: 700; letter-spacing: -0.04em; line-height: 0.95; }
+  .s-stack .vendor-tag span {
+    font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2);
+  }
+  .s-stack .lede { font-size: 30px; line-height: 1.3; color: var(--ink); font-weight: 400; max-width: 600px; }
+  .s-stack .killer { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .s-stack .killer .label { font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+  .s-stack .killer ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .s-stack .killer li { font-size: 20px; color: var(--ink); padding-left: 20px; position: relative; line-height: 1.4; }
+  .s-stack .killer li::before { content: ""; position: absolute; left: 0; top: 0.7em; width: 8px; height: 1px; background: var(--purple); }
+  .s-stack .best-for {
+    margin-top: 12px; padding: 20px 24px; background: var(--purple-soft); border-radius: 8px;
+    font-size: 19px; color: var(--purple-deep); line-height: 1.4;
+  }
+  .s-stack .best-for b { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--purple); display: block; margin-bottom: 4px; font-weight: 500; }
+  .s-stack .right { display: flex; flex-direction: column; gap: 16px; padding-top: 80px; }
+  .s-stack .right .label { font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+  .s-stack .surface {
+    border: 1px solid var(--rule); border-radius: 10px; padding: 24px 28px; background: var(--paper);
+    display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center;
+  }
+  .s-stack .surface .index { font-family: "Geist Mono", monospace; font-size: 14px; color: var(--ink-3); }
+  .s-stack .surface .nm { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+  .s-stack .surface .nm small { display: block; font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.04em; color: var(--ink-3); margin-top: 4px; font-weight: 400; text-transform: none; }
+  .s-stack .surface .url { font-family: "Geist Mono", monospace; font-size: 13px; color: var(--ink-3); }
+
+  /* ===== Slide 7: compliance hero quote ===== */
+  .s-quote { display: flex; flex-direction: column; justify-content: center; gap: 56px; }
+  .s-quote .quote-block {
+    max-width: 1500px;
+    font-family: "Instrument Serif", serif;
+    font-size: 88px; font-weight: 400; line-height: 1.05; letter-spacing: -0.015em; color: var(--ink);
+  }
+  .s-quote .quote-block em { font-style: italic; color: var(--purple); }
+  .s-quote .quote-mark {
+    font-family: "Instrument Serif", serif;
+    font-size: 200px; line-height: 0.6; color: var(--lime-deep);
+  }
+  .s-quote .clarifications {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--rule); padding-top: 28px;
+  }
+  .s-quote .clarifications > div { padding: 0 32px; border-right: 1px solid var(--rule); }
+  .s-quote .clarifications > div:first-child { padding-left: 0; }
+  .s-quote .clarifications > div:last-child { border-right: none; padding-right: 0; }
+  .s-quote .clarifications .n { font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--purple); margin-bottom: 8px; }
+  .s-quote .clarifications p { font-size: 18px; line-height: 1.45; color: var(--ink-2); }
+
+  /* ===== Slide 8: tier hierarchy ===== */
+  .s-tiers .header-row { display: flex; align-items: end; justify-content: space-between; gap: 64px; margin-bottom: 48px; }
+  .s-tiers .header-row p { max-width: 480px; font-size: 19px; color: var(--ink-2); line-height: 1.5; }
+  .s-tiers .stack { display: flex; flex-direction: column; gap: 12px; }
+  .s-tiers .tier {
+    display: grid; grid-template-columns: 60px 1fr 2.4fr 1.2fr; gap: 24px; align-items: center;
+    padding: 24px 28px; border-radius: 8px; border: 1px solid var(--rule); background: var(--paper);
+    position: relative;
+  }
+  .s-tiers .tier .lvl { font-family: "Geist Mono", monospace; font-size: 14px; color: var(--ink-3); letter-spacing: 0.1em; }
+  .s-tiers .tier .name { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .s-tiers .tier .name small { display: block; font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.06em; font-weight: 400; color: var(--ink-3); margin-top: 4px; text-transform: uppercase; }
+  .s-tiers .tier .what { font-size: 16px; color: var(--ink-2); line-height: 1.4; }
+  .s-tiers .tier .who { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); line-height: 1.5; }
+  .s-tiers .tier.t1 { background: #ffffff; border-left: 4px solid var(--purple); margin-left: 0; }
+  .s-tiers .tier.t2 { background: #ffffff; border-left: 4px solid var(--purple); margin-left: 60px; opacity: 0.96; }
+  .s-tiers .tier.t3 { background: #ffffff; border-left: 4px solid var(--amber); margin-left: 120px; opacity: 0.92; }
+  .s-tiers .tier.t4 { background: #ffffff; border-left: 4px solid var(--red); margin-left: 180px; opacity: 0.88; }
+  .s-tiers .axis-label { position: absolute; left: 30px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 24px 0; }
+  .s-tiers .axis-label span { font-family: "Geist Mono", monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); writing-mode: vertical-rl; transform: rotate(180deg); }
+  .s-tiers .takeaway { margin-top: 28px; font-size: 18px; color: var(--ink); font-style: italic; }
+
+  /* ===== Slide 9: traffic light + scrutiny ===== */
+  .s-tl { display: grid; grid-template-rows: auto 1fr auto; gap: 40px; }
+  .s-tl .split { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 56px; align-items: stretch; }
+  .s-tl .divider { background: var(--rule); width: 1px; }
+  .s-tl .panel-title {
+    font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3);
+    margin-bottom: 28px;
+  }
+  .s-tl .panel-title b { color: var(--purple); font-weight: 500; }
+  .s-tl .level { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--rule); align-items: flex-start; }
+  .s-tl .level:last-child { border-bottom: none; }
+  .s-tl .level .dot { width: 14px; height: 14px; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+  .s-tl .level .dot.green { background: var(--green); }
+  .s-tl .level .dot.amber { background: var(--amber); }
+  .s-tl .level .dot.red { background: var(--red); }
+  .s-tl .level .l-stack { display: flex; flex-direction: column; gap: 6px; }
+  .s-tl .level .nm { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .s-tl .level .nm em { font-style: normal; font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-left: 12px; font-weight: 400; }
+  .s-tl .level .ex { font-size: 17px; color: var(--ink-2); line-height: 1.4; }
+  .s-tl .level .req { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--purple); }
+  .s-tl .scrut .level .req { color: var(--purple); }
+  .s-tl .scrut .level .nm em { letter-spacing: 0.16em; }
+  .s-tl .scrut .step { display: flex; align-items: center; gap: 10px; }
+  .s-tl .scrut .step .bars { display: flex; gap: 3px; }
+  .s-tl .scrut .step .bars i { display: block; width: 6px; height: 14px; background: var(--rule-2); border-radius: 1px; }
+  .s-tl .scrut .step .bars i.on { background: var(--purple); }
+  .s-tl .callout {
+    padding: 22px 28px; background: var(--purple-deep); color: #fff; border-radius: 8px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .s-tl .callout .marker {
+    font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--lime); padding-right: 20px; border-right: 1px solid rgba(255,255,255,0.2);
+  }
+  .s-tl .callout p { font-size: 19px; }
+
+  /* ===== Slide 10: competency flow ===== */
+  .s-flow .flow {
+    margin-top: 72px; display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr; align-items: stretch; gap: 0;
+  }
+  .s-flow .step {
+    border: 1px solid var(--rule); border-radius: 10px; padding: 36px 32px; background: var(--paper);
+    display: flex; flex-direction: column; gap: 14px; min-height: 240px;
+  }
+  .s-flow .step .ord { font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; color: var(--purple); }
+  .s-flow .step .nm { font-size: 44px; font-weight: 600; letter-spacing: -0.02em; }
+  .s-flow .step .desc { font-size: 17px; color: var(--ink-2); line-height: 1.45; }
+  .s-flow .arrow { display: flex; align-items: center; justify-content: center; }
+  .s-flow .arrow svg { width: 100%; max-width: 60px; }
+  .s-flow .pillars {
+    margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; border-top: 1px solid var(--rule); padding-top: 32px;
+  }
+  .s-flow .pillars > div { padding: 0 28px; border-right: 1px solid var(--rule); }
+  .s-flow .pillars > div:first-child { padding-left: 0; }
+  .s-flow .pillars > div:last-child { border-right: none; }
+  .s-flow .pillars .ph { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .s-flow .pillars .pd { font-size: 16px; color: var(--ink-2); line-height: 1.45; }
+  .s-flow .why { margin-top: 28px; font-size: 18px; color: var(--ink); font-style: italic; }
+
+  /* ===== Slide 11: Survey + spider chart ===== */
+  .s-rudi { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: stretch; }
+  .s-rudi .left { display: flex; flex-direction: column; gap: 28px; }
+  .s-rudi .survey-card {
+    border: 1px solid var(--rule); border-radius: 10px; padding: 32px; background: var(--paper);
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .s-rudi .survey-card .lead { display: flex; align-items: center; gap: 12px; }
+  .s-rudi .survey-card .lead .badge { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; padding: 4px 10px; background: var(--lime); color: var(--purple-deep); border-radius: 4px; }
+  .s-rudi .survey-card h3 { font-size: 32px; font-weight: 600; letter-spacing: -0.02em; }
+  .s-rudi .survey-card .url { font-family: "Geist Mono", monospace; font-size: 16px; color: var(--purple); padding: 8px 12px; background: var(--purple-soft); border-radius: 4px; width: fit-content; }
+  .s-rudi .survey-card .meta { display: flex; gap: 18px; font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .s-rudi .survey-card .captures { display: flex; flex-wrap: wrap; gap: 6px; }
+  .s-rudi .survey-card .captures span {
+    font-family: "Geist Mono", monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 5px 9px; border: 1px solid var(--rule-2); border-radius: 4px; color: var(--ink-2);
+  }
+  .s-rudi .announce {
+    padding: 22px 28px; background: var(--purple-deep); color: #fff; border-radius: 8px;
+    display: flex; gap: 16px; align-items: center;
+  }
+  .s-rudi .announce .marker { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lime); }
+  .s-rudi .announce p { font-size: 17px; line-height: 1.4; }
+  .s-rudi .right { display: flex; flex-direction: column; gap: 18px; }
+  .s-rudi .chart-card {
+    border: 1px solid var(--rule); border-radius: 10px; padding: 32px; background: var(--paper);
+    flex: 1; display: flex; flex-direction: column; gap: 18px;
+  }
+  .s-rudi .chart-card .head { display: flex; justify-content: space-between; align-items: baseline; }
+  .s-rudi .chart-card .head .ti { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+  .s-rudi .chart-card .head .sc { font-family: "Geist Mono", monospace; font-size: 14px; color: var(--ink-3); }
+  .s-rudi .chart-card .chart { flex: 1; display: flex; justify-content: center; align-items: center; min-height: 360px; }
+  .s-rudi .chart-card .legend { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; padding-top: 14px; border-top: 1px solid var(--rule); }
+  .s-rudi .chart-card .legend > div { display: flex; flex-direction: column; gap: 4px; }
+  .s-rudi .chart-card .legend .lbl { font-family: "Geist Mono", monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+  .s-rudi .chart-card .legend .val { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; }
+  .s-rudi .chart-card .legend .val small { font-family: "Geist Mono", monospace; font-size: 13px; color: var(--ink-3); font-weight: 400; margin-left: 4px; }
+
+  /* ===== Slide 12: 3 pilot outputs ===== */
+  .s-pilots .cards { margin-top: 44px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .s-pilots .card {
+    border: 1px solid var(--rule); border-radius: 10px; padding: 32px 32px; background: var(--paper);
+    display: flex; flex-direction: column; gap: 16px; min-height: 420px;
+  }
+  .s-pilots .card .ord { display: flex; align-items: baseline; gap: 12px; }
+  .s-pilots .card .ord .n { font-family: "Geist Mono", monospace; font-size: 13px; color: var(--purple); letter-spacing: 0.16em; }
+  .s-pilots .card .ord .step { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase; }
+  .s-pilots .card .nm { font-size: 36px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.05; }
+  .s-pilots .card .desc { font-size: 17px; color: var(--ink-2); line-height: 1.45; }
+  .s-pilots .card .why {
+    margin-top: auto; padding-top: 16px; border-top: 1px solid var(--rule);
+    font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--purple); line-height: 1.5;
+  }
+  .s-pilots .takeaway { margin-top: 26px; font-size: 18px; color: var(--ink); font-style: italic; }
+
+  /* ===== Slide 13: CRAFT ===== */
+  .s-craft .grid { margin-top: 56px; display: grid; grid-template-columns: 90px 200px 1fr; gap: 0; border-top: 1px solid var(--rule); }
+  .s-craft .row { display: contents; }
+  .s-craft .row > * { padding: 18px 24px 18px 0; border-bottom: 1px solid var(--rule); }
+  .s-craft .row > *:first-child { padding-left: 0; }
+  .s-craft .row .letter { font-size: 56px; font-weight: 700; letter-spacing: -0.04em; color: var(--purple); line-height: 1; padding-top: 18px; }
+  .s-craft .row .word { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; padding-top: 28px; }
+  .s-craft .row .ex { display: flex; flex-direction: column; gap: 8px; padding-top: 24px; padding-left: 32px; }
+  .s-craft .row .ex .desc { font-size: 17px; color: var(--ink-2); line-height: 1.4; }
+  .s-craft .row .ex .quote {
+    font-family: "Geist Mono", monospace; font-size: 14px; color: var(--ink); background: var(--purple-soft);
+    padding: 10px 14px; border-radius: 4px; line-height: 1.5; width: fit-content; max-width: 100%;
+  }
+  .s-craft .why-row { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 200px 1fr; gap: 32px; max-width: 1300px; }
+  .s-craft .why-row .lab { font-family: "Geist Mono", monospace; font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+  .s-craft .why-row p { font-size: 17px; color: var(--ink-2); line-height: 1.5; max-width: 900px; }
+
+  /* ===== Slide 14: Monday action ===== */
+  .s-monday { display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: start; }
+  .s-monday .left { display: flex; flex-direction: column; gap: 32px; }
+  .s-monday .actions { display: flex; flex-direction: column; gap: 18px; margin-top: 16px; }
+  .s-monday .action {
+    display: grid; grid-template-columns: 80px 1fr; gap: 0; padding: 22px 0; border-bottom: 1px solid var(--rule);
+  }
+  .s-monday .action:last-child { border-bottom: none; }
+  .s-monday .action .n { font-family: "Geist Mono", monospace; font-size: 32px; color: var(--purple); font-weight: 500; letter-spacing: -0.01em; }
+  .s-monday .action .body { display: flex; flex-direction: column; gap: 6px; }
+  .s-monday .action h4 { font-size: 26px; font-weight: 600; letter-spacing: -0.015em; margin: 0; }
+  .s-monday .action p { font-size: 16px; color: var(--ink-2); line-height: 1.4; }
+  .s-monday .right {
+    background: var(--purple-deep); color: #fff; padding: 40px; border-radius: 10px; height: 100%;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .s-monday .right .label { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lime); }
+  .s-monday .right h3 { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+  .s-monday .right .deliv { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .s-monday .right .deliv .item { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .s-monday .right .deliv .item:last-child { border-bottom: none; }
+  .s-monday .right .deliv .item .n { font-family: "Geist Mono", monospace; font-size: 13px; color: var(--lime); }
+  .s-monday .right .deliv .item .nm { font-size: 17px; font-weight: 500; }
+  .s-monday .right .deliv .item .nm small { display: block; font-family: "Geist Mono", monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 4px; font-weight: 400; }
+
+  /* ===== Slide 15: Q&A ===== */
+  .s-qa { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 40px; }
+  .s-qa .qmark { font-family: "Instrument Serif", serif; font-size: 360px; line-height: 0.85; color: var(--purple); font-style: italic; letter-spacing: -0.04em; }
+  .s-qa .label { font-family: "Geist Mono", monospace; font-size: 16px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-3); }
+  .s-qa h2 { font-size: 120px; font-weight: 600; letter-spacing: -0.04em; line-height: 0.95; }
+  .s-qa .meta { display: flex; gap: 32px; align-items: center; margin-top: 16px; }
+  .s-qa .meta .item { font-family: "Geist Mono", monospace; font-size: 15px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
+  .s-qa .meta .dot { width: 4px; height: 4px; background: var(--ink-3); border-radius: 50%; }
+
+  /* ===== Slide 16: CTA ===== */
+  .s-cta { background: var(--purple-deep) !important; color: #fff; }
+  .s-cta .crumb, .s-cta .pgnum, .s-cta .footnote, .s-cta .footmark { color: rgba(255,255,255,0.55); }
+  .s-cta .crumb .dot { background: var(--lime); }
+  .s-cta { display: grid; grid-template-rows: auto 1fr auto; }
+  .s-cta .body-wrap { display: grid; grid-template-columns: 1.3fr 1fr; gap: 80px; align-items: center; }
+  .s-cta .left { display: flex; flex-direction: column; gap: 32px; }
+  .s-cta .eyebrow { color: var(--lime); }
+  .s-cta h1 { font-size: 96px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.0; }
+  .s-cta h1 em { color: var(--lime); font-style: normal; }
+  .s-cta .lede { font-size: 22px; line-height: 1.45; color: rgba(255,255,255,0.7); max-width: 700px; }
+  .s-cta .cta-btn {
+    display: inline-flex; align-items: center; gap: 16px; padding: 18px 28px; border-radius: 8px;
+    background: var(--lime); color: var(--purple-deep);
+    font-family: "Geist Mono", monospace; font-size: 16px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600;
+    width: fit-content; margin-top: 8px;
+  }
+  .s-cta .right {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); padding: 36px; border-radius: 10px;
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .s-cta .right .label { font-family: "Geist Mono", monospace; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lime); }
+  .s-cta .right h3 { font-size: 26px; font-weight: 600; letter-spacing: -0.01em; }
+  .s-cta .right .modules { display: flex; flex-direction: column; gap: 12px; }
+  .s-cta .right .mod { display: grid; grid-template-columns: 32px 1fr; gap: 10px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.12); }
+  .s-cta .right .mod:last-child { border-bottom: none; }
+  .s-cta .right .mod .n { font-family: "Geist Mono", monospace; font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.1em; }
+  .s-cta .right .mod .nm { font-size: 16px; font-weight: 500; line-height: 1.3; }
+
+</style>
+<script type="application/json" id="speaker-notes">
+[
+  "Welcome the room. AfroTech intro takes us through 4:00–4:10. At 4:10 we take the floor and run for 25 minutes.",
+  "Frame the whole session here. Three lenses, in order: Cost, Compliance, Competency. Most leaders camp at Cost — the wins are the next two.",
+  "Set up the platforms walkthrough. Most of you are already paying for Microsoft Copilot — keep it, add to it, or swap is the real question.",
+  "Tab through the OpenAI suite. Cheapest entry, biggest ecosystem. Two minutes max.",
+  "Tab through Claude. Most expensive, best for nuanced reasoning and the agent stack — Computer Use, Skill Jar, Projects. Two minutes.",
+  "Tab through Gemini. Drive integration is the killer feature; NotebookLM for research-heavy teams. Heads up — these tools are powerful but disconnected.",
+  "Slow down here. The risk isn't the AI provider, it's the tier of account your team is using. Set up the next two slides.",
+  "Walk the four tiers top to bottom. Ask the room what tier they're on. Make the point: your team's risk is set by the lowest tier anyone is using.",
+  "Two systems working together. Traffic light = which tools are okay. Scrutiny = how hard to look at the output. Match Red docs to High scrutiny — always.",
+  "Set up Survey, Score, Pilot. Three pillars: Conceptual, Operational, Governance. Don't deploy AI to a team you haven't measured.",
+  "Live demo time. Open the survey, then the Claude project, paste 16 anonymized responses, generate the radar chart, read two recommendations. Four minutes.",
+  "After the survey you build three things in this order: prompt library, then power-user pilots, then resource center. Don't skip steps.",
+  "Show one CRAFT prompt running live. Same input, same output. New hires inherit the team's prompt wisdom on day one.",
+  "Three things to do this week. Send the survey. Pick one pilot. Start the resource center. Don't wait for perfect.",
+  "Hand off to AfroTech for facilitated Q&A.",
+  "AfroTech's 1-day training CTA closes us out."
+]
+</script>
+</head>
+<body>
+
+<deck-stage thumbnails="true">
+
+<!-- ============ 1. TITLE ============ -->
+<section class="s-title" data-screen-label="01 Title">
+  <div class="meta-row">
+    <div class="stamp">
+      <span><b>AFROTECH</b> — AI EDGE VIRTUAL SUMMIT</span>
+      <span>SESSION 02 / 04</span>
+    </div>
+    <div class="stamp" style="text-align: right; align-items: flex-end;">
+      <span>2026 · 60 MIN</span>
+      <span>4:00 — 5:00 PM EST</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="welcome">— Welcome to —</div>
+    <div class="lockup">
+      <span class="ai">AI</span><span>EDGE.</span>
+    </div>
+    <div class="summit">Virtual Summit · Session 02</div>
+    <div style="font-size: 38px; font-weight: 500; letter-spacing: -0.02em; margin-top: 16px; max-width: 1100px; line-height: 1.2;">
+      AI for People Leaders — <span style="color: var(--ink-3);">Evolve Your Team's Workflows.</span>
+    </div>
+  </div>
+
+  <div class="speaker">
+    <div class="avatar"></div>
+    <div class="speaker-meta">
+      <div class="name">Brandon — Workshop Lead</div>
+      <div class="role">25 min training block · 4:10 → 4:35</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. THE 3Cs ============ -->
+<section class="s-3c" data-screen-label="02 The 3Cs">
+  <div class="crumb"><span class="dot"></span><span>Opening · The Frame</span></div>
+  <div class="pgnum">02 / 16</div>
+
+  <div style="display: flex; align-items: end; justify-content: space-between; gap: 48px; padding-top: 80px;">
+    <div style="max-width: 1000px;">
+      <div class="eyebrow" style="margin-bottom: 18px;">The 3Cs of AI Adoption</div>
+      <h1 class="h1">How a People Leader<br/>should think about AI.</h1>
+    </div>
+    <p style="font-family: 'Instrument Serif', serif; font-size: 28px; line-height: 1.3; color: var(--ink-2); font-style: italic; max-width: 360px;">Three lenses. In this order.</p>
+  </div>
+
+  <div class="three-col">
+    <div class="col">
+      <div class="num">01</div>
+      <div class="label">Cost.</div>
+      <p class="desc">What tools, what stack, what does it actually cost to arm your team end-to-end?</p>
+      <div class="tags">
+        <span>OpenAI</span><span>Anthropic</span><span>Google</span>
+      </div>
+    </div>
+    <div class="col">
+      <div class="num">02</div>
+      <div class="label"><span class="accent">Compliance.</span></div>
+      <p class="desc">Where the actual risk lives, what data goes where, and how hard to scrutinize the output.</p>
+      <div class="tags">
+        <span>Account tier</span><span>Traffic light</span><span>Scrutiny</span>
+      </div>
+    </div>
+    <div class="col">
+      <div class="num">03</div>
+      <div class="label"><span class="accent">Competency.</span></div>
+      <p class="desc">Your team's real skill level — measured, not guessed. How to survey, pilot, standardize.</p>
+      <div class="tags">
+        <span>Survey</span><span>Score</span><span>Pilot</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <span class="marker">Takeaway</span>
+    <p>Most leaders start <em style="font-style: italic; color: var(--ink-3);">and stop</em> at Cost. The wins are in <span style="color: var(--purple); font-weight: 500;">Compliance</span> and <span style="color: var(--purple); font-weight: 500;">Competency</span>.</p>
+  </div>
+  <div class="footnote">3 min — Frame the session</div>
+</section>
+
+<!-- ============ 3. COST: 3 platforms ============ -->
+<section class="s-platforms" data-screen-label="03 Cost · 3 Platforms">
+  <div class="crumb"><span class="dot"></span><span>01 — Cost</span></div>
+  <div class="pgnum">03 / 16</div>
+
+  <div style="padding-top: 80px;">
+    <div class="eyebrow" style="margin-bottom: 18px;">The 3 platforms that matter</div>
+    <h1 class="h1" style="max-width: 1400px;">What does it cost<br/>to arm your team with AI?</h1>
+  </div>
+
+  <div class="platforms">
+    <div class="plat">
+      <div class="num">01</div>
+      <div>
+        <div class="name">OpenAI</div>
+        <div style="height: 8px;"></div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--ink); font-weight: 500;">$20 · $100 · $200 / seat</div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 13px; color: var(--ink-3); margin-top: 4px;">most cost-effective</div>
+      </div>
+      <div class="tag">ChatGPT · Codex · Platform</div>
+    </div>
+    <div class="plat">
+      <div class="num">02</div>
+      <div>
+        <div class="name">Anthropic</div>
+        <div style="height: 8px;"></div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--ink); font-weight: 500;">$20 · $100 · $200 / seat</div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 13px; color: var(--ink-3); margin-top: 4px;">premium — best agent stack</div>
+      </div>
+      <div class="tag">Claude · Console · Skill Jar · Design</div>
+    </div>
+    <div class="plat">
+      <div class="num">03</div>
+      <div>
+        <div class="name">Google</div>
+        <div style="height: 8px;"></div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--ink); font-weight: 500;">$20 · $250 · Workspace</div>
+        <div style="font-family: 'Geist Mono', monospace; font-size: 13px; color: var(--ink-3); margin-top: 4px;">broadest — AI Pro · Ultra · Bundle</div>
+      </div>
+      <div class="tag">Gemini · AI Studio · Labs · Jules</div>
+    </div>
+  </div>
+
+  <div class="copilot-strip">
+    <div class="lead">Where most of you start</div>
+    <p>Most corporate teams default to <strong>Microsoft Copilot</strong> — and most employees find it inefficient for actual work. The real question isn't <em>"should we use AI?"</em> — it's <strong>keep Copilot? add on top? swap?</strong></p>
+  </div>
+
+  <div class="footnote">7 min — Three platform walkthroughs follow</div>
+</section>
+
+<!-- ============ 4. OpenAI ============ -->
+<section class="s-stack" data-screen-label="04 OpenAI">
+  <div class="crumb"><span class="dot"></span><span>01 — Cost · Platform 01</span></div>
+  <div class="pgnum">04 / 16</div>
+
+  <div class="left">
+    <div class="vendor-tag" style="padding-top: 60px;">
+      <span class="pip" style="background: var(--purple);"></span>
+      <span>Stack 01 — OpenAI</span>
+    </div>
+    <div class="vendor-name">OpenAI.</div>
+    <p class="lede">The most cost-effective stack overall. Lowest entry per seat, biggest ecosystem.</p>
+    <div class="killer">
+      <div class="label">Killer features</div>
+      <ul>
+        <li>Lowest entry cost per seat — Plus = $20/mo</li>
+        <li>Custom GPTs for team-specific workflows</li>
+        <li>Largest third-party ecosystem</li>
+      </ul>
+    </div>
+    <div class="best-for">
+      <b>Best for</b>
+      Teams of any size starting from scratch · Budget-conscious orgs.
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="label">What's in the suite</div>
+    <div class="surface">
+      <span class="index">01</span>
+      <div class="nm">ChatGPT<small>The chat interface most people already know.</small></div>
+      <span class="url">chat.openai.com</span>
+    </div>
+    <div class="surface">
+      <span class="index">02</span>
+      <div class="nm">Codex<small>Agent workstation for technical work.</small></div>
+      <span class="url">chatgpt.com/codex</span>
+    </div>
+    <div class="surface">
+      <span class="index">03</span>
+      <div class="nm">OpenAI Platform<small>Prompt eng, model testing, API, agents, audio + image.</small></div>
+      <span class="url">platform.openai.com</span>
+    </div>
+  </div>
+
+  <div class="footnote">Live tab walkthrough — 2 min headlines</div>
+</section>
+
+<!-- ============ 5. Anthropic ============ -->
+<section class="s-stack" data-screen-label="05 Anthropic">
+  <div class="crumb"><span class="dot"></span><span>01 — Cost · Platform 02</span></div>
+  <div class="pgnum">05 / 16</div>
+
+  <div class="left">
+    <div class="vendor-tag" style="padding-top: 60px;">
+      <span class="pip" style="background: var(--purple);"></span>
+      <span>Stack 02 — Anthropic</span>
+    </div>
+    <div class="vendor-name">Claude.</div>
+    <p class="lede">Most expensive of the three — the strongest agent ecosystem and reasoning quality.</p>
+    <div class="killer">
+      <div class="label">Killer features</div>
+      <ul>
+        <li>Best-in-class reasoning + writing quality</li>
+        <li>Computer-use for genuine agent workflows</li>
+        <li>Claude Projects — shared context per use case</li>
+      </ul>
+    </div>
+    <div class="best-for">
+      <b>Best for</b>
+      Knowledge-work teams · Regulated industries · Anyone serious about agents.
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="label">What's in the suite</div>
+    <div class="surface">
+      <span class="index">01</span>
+      <div class="nm">Claude<small>Strongest for nuanced reasoning + writing.</small></div>
+      <span class="url">claude.ai</span>
+    </div>
+    <div class="surface">
+      <span class="index">02</span>
+      <div class="nm">Anthropic Console<small>Workbench, prompt eng, API access.</small></div>
+      <span class="url">console.anthropic.com</span>
+    </div>
+    <div class="surface">
+      <span class="index">03</span>
+      <div class="nm">Skill Jar<small>Pre-built skills — get on the email list.</small></div>
+      <span class="url">anthropic.com/skills</span>
+    </div>
+    <div class="surface">
+      <span class="index">04</span>
+      <div class="nm">Claude Desktop<small>Full computer-use access — files, apps, browser.</small></div>
+      <span class="url">claude.ai/download</span>
+    </div>
+    <div class="surface">
+      <span class="index">05</span>
+      <div class="nm">Claude Design<small>Generative design surface inside Claude.</small></div>
+      <span class="url">claude.ai/design</span>
+    </div>
+  </div>
+
+  <div class="footnote">Live tab walkthrough — 2 min</div>
+</section>
+
+<!-- ============ 6. Google ============ -->
+<section class="s-stack" data-screen-label="06 Google">
+  <div class="crumb"><span class="dot"></span><span>01 — Cost · Platform 03</span></div>
+  <div class="pgnum">06 / 16</div>
+
+  <div class="left">
+    <div class="vendor-tag" style="padding-top: 60px;">
+      <span class="pip" style="background: var(--purple);"></span>
+      <span>Stack 03 — Google</span>
+    </div>
+    <div class="vendor-name">Gemini.</div>
+    <p class="lede">Broadest ecosystem. Drive integration is the killer feature.</p>
+    <div class="killer">
+      <div class="label">Killer features</div>
+      <ul>
+        <li>Native to Workspace — no copy-paste</li>
+        <li>NotebookLM for research-heavy teams</li>
+        <li>AI Studio for non-technical builders</li>
+      </ul>
+    </div>
+    <div class="best-for" style="background: #fbf3d8; color: #5a4810;">
+      <b style="color: #8a6d18;">Heads-up</b>
+      Google's tools are powerful but disconnected. Pick the ones you need — don't try to use all of them.
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="label">What's in the suite</div>
+    <div class="surface">
+      <span class="index">01</span>
+      <div class="nm">Gemini<small>Chat — Personal Intelligence in Google Labs.</small></div>
+      <span class="url">gemini.google.com</span>
+    </div>
+    <div class="surface">
+      <span class="index">02</span>
+      <div class="nm">AI Studio<small>The builder — Google's "Lovable" equivalent.</small></div>
+      <span class="url">aistudio.google.com</span>
+    </div>
+    <div class="surface">
+      <span class="index">03</span>
+      <div class="nm">NotebookLM<small>Research + synthesis with cited answers.</small></div>
+      <span class="url">notebooklm.google.com</span>
+    </div>
+    <div class="surface">
+      <span class="index">04</span>
+      <div class="nm">Google Labs<small>FX · Image FX · Music FX · Flow · Stitch — creative generation suite.</small></div>
+      <span class="url">labs.google</span>
+    </div>
+    <div class="surface">
+      <span class="index">05</span>
+      <div class="nm">Jules + Antigravity<small>Coding agents · automated dev workflows.</small></div>
+      <span class="url">jules.google · antigravity</span>
+    </div>
+    <div class="surface">
+      <span class="index">06</span>
+      <div class="nm">Drive integration<small>Reads + writes Docs, Sheets, Gmail directly.</small></div>
+      <span class="url">workspace</span>
+    </div>
+  </div>
+
+  <div class="footnote">Live tab walkthrough — 2 min · Best for Workspace shops</div>
+</section>
+
+<!-- ============ 7. Compliance hero quote ============ -->
+<section class="s-quote" data-screen-label="07 Compliance · Is My Data Safe">
+  <div class="crumb"><span class="dot"></span><span>02 — Compliance</span></div>
+  <div class="pgnum">07 / 16</div>
+
+  <div style="padding-top: 60px;">
+    <div class="eyebrow" style="margin-bottom: 12px;">QUESTION EVERY TEAM LEADER ASKS</div>
+    <h1 class="h1" style="font-size: 64px;">"Is my data safe?"</h1>
+  </div>
+
+  <div style="display: flex; gap: 40px; align-items: flex-start;">
+    <div class="quote-mark" style="flex-shrink:0; padding-top: 60px;">"</div>
+    <div class="quote-block">The risk is less about the AI provider and more about the account tier. The lower the tier of account, the fewer controls you usually have. </div>
+  </div>
+
+  <div class="clarifications">
+    <div>
+      <div class="n">01 / Investment</div>
+      <p>OpenAI, Anthropic, Google all invest heavily in security — same as Workspace, Dropbox, SharePoint.</p>
+    </div>
+    <div>
+      <div class="n">02 / Vector</div>
+      <p>The vulnerability is in <em>how you access</em> the tool — not whether you use it.</p>
+    </div>
+    <div>
+      <div class="n">03 / Lowest tier wins</div>
+      <p>Your team's risk is set by the lowest-tier account anyone on the team is using.</p>
+    </div>
+  </div>
+
+  <div class="footnote">5 min — Compliance section</div>
+</section>
+
+<!-- ============ 8. Tier hierarchy ============ -->
+<section class="s-tiers" data-screen-label="08 Account Tier Hierarchy">
+  <div class="crumb"><span class="dot"></span><span>02 — Compliance · Tiers</span></div>
+  <div class="pgnum">08 / 16</div>
+
+  <div style="padding-top: 60px;">
+    <div class="header-row">
+      <div>
+        <div class="eyebrow" style="margin-bottom: 16px;">Account Tier Hierarchy</div>
+        <h1 class="h2" style="max-width: 1100px;">The lower the tier, the fewer protections you have.</h1>
+      </div>
+      <p>Top → bottom: most secure to most exposed. Position your team at the highest tier they actually need — and write down the floor for sensitive data.</p>
+    </div>
+
+    <div class="stack">
+      <div class="tier t1">
+        <span class="lvl">T1</span>
+        <div>
+          <div class="name">Enterprise API <small>with contract / BAA</small></div>
+        </div>
+        <p class="what">Zero data retention · No training on your data · Audit logs · Contractual commitments.</p>
+        <p class="who">Healthcare · Finance · Legal · PHI / PII / financials</p>
+      </div>
+      <div class="tier t2">
+        <span class="lvl">T2</span>
+        <div>
+          <div class="name">Team / Business <small>subscription</small></div>
+        </div>
+        <p class="what">Usually no training · Retention varies — read terms · Some admin controls.</p>
+        <p class="who">Most teams of 5+ · The minimum responsible default</p>
+      </div>
+      <div class="tier t3">
+        <span class="lvl">T3</span>
+        <div>
+          <div class="name">Personal subscription <small>plus / pro</small></div>
+        </div>
+        <p class="what">May be used for training unless toggled off · Limited admin controls.</p>
+        <p class="who">Solo experimentation only — not for team work</p>
+      </div>
+      <div class="tier t4">
+        <span class="lvl">T4</span>
+        <div>
+          <div class="name">Browser-based <small>+ extensions</small></div>
+        </div>
+        <p class="what">Adds extension-intercept surface area on top of any tier.</p>
+        <p class="who">Avoid for sensitive data — period</p>
+      </div>
+    </div>
+
+    <p class="takeaway">"Tell your team: assume anything you put in a personal account or a browser extension can be seen."</p>
+  </div>
+
+  <div class="footnote">2 min — Walk the tiers, ask the room what they're on</div>
+</section>
+
+<!-- ============ 9. Traffic light + scrutiny ============ -->
+<section class="s-tl" data-screen-label="09 Traffic Light + Scrutiny">
+  <div class="crumb"><span class="dot"></span><span>02 — Compliance · Operating model</span></div>
+  <div class="pgnum">09 / 16</div>
+
+  <div style="padding-top: 60px;">
+    <div class="eyebrow" style="margin-bottom: 16px;">Operating model</div>
+    <h1 class="h2">What data goes where, and how hard to look at the output.</h1>
+  </div>
+
+  <div class="split">
+    <div class="tl">
+      <div class="panel-title"><b>← Left</b> · Traffic Light · Document classification</div>
+      <div class="level">
+        <span class="dot green"></span>
+        <div class="l-stack">
+          <div class="nm">Green <em>Public · non-sensitive</em></div>
+          <div class="ex">Marketing copy · public reports · brainstorming · ideation</div>
+          <div class="req">→ Any tier, any tool</div>
+        </div>
+      </div>
+      <div class="level">
+        <span class="dot amber"></span>
+        <div class="l-stack">
+          <div class="nm">Yellow <em>Internal · proprietary</em></div>
+          <div class="ex">Strategy docs · internal comms · draft work product</div>
+          <div class="req">→ Team subscription minimum · No personal accounts</div>
+        </div>
+      </div>
+      <div class="level">
+        <span class="dot red"></span>
+        <div class="l-stack">
+          <div class="nm">Red <em>Confidential · regulated</em></div>
+          <div class="ex">Client data · PII / PHI · financials · legal · contracts</div>
+          <div class="req">→ Enterprise API only · with verification process</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="scrut">
+      <div class="panel-title"><b>Right →</b> · Level of scrutiny · Human review</div>
+      <div class="level">
+        <div class="step"><div class="bars"><i class="on"></i><i></i><i></i></div></div>
+        <div class="l-stack">
+          <div class="nm">Low <em>1 of 3</em></div>
+          <div class="ex">Internal drafts · brainstorming · ideation</div>
+          <div class="req">→ Light review · One pass · Trust the model</div>
+        </div>
+      </div>
+      <div class="level">
+        <div class="step"><div class="bars"><i class="on"></i><i class="on"></i><i></i></div></div>
+        <div class="l-stack">
+          <div class="nm">Medium <em>2 of 3</em></div>
+          <div class="ex">Client-facing or external-facing work</div>
+          <div class="req">→ Substantive review · Edit + verify claims · SME check</div>
+        </div>
+      </div>
+      <div class="level">
+        <div class="step"><div class="bars"><i class="on"></i><i class="on"></i><i class="on"></i></div></div>
+        <div class="l-stack">
+          <div class="nm">High <em>3 of 3</em></div>
+          <div class="ex">Regulated · contractual · legally binding</div>
+          <div class="req">→ Verified human-in-the-loop · Documented · Multiple eyes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="marker">Pair them</span>
+    <p>Match the traffic light to the scrutiny level. <strong style="color: var(--lime); font-weight: 500;">Red doc = High scrutiny. Always.</strong></p>
+  </div>
+
+  <div class="footnote">2 min — These two systems work together</div>
+</section>
+
+<!-- ============ 10. Competency flow ============ -->
+<section class="s-flow" data-screen-label="10 Competency · Survey Score Pilot">
+  <div class="crumb"><span class="dot"></span><span>03 — Competency</span></div>
+  <div class="pgnum">10 / 16</div>
+
+  <div style="padding-top: 60px;">
+    <div class="eyebrow" style="margin-bottom: 16px;">The Competency loop</div>
+    <h1 class="h1">Stop guessing where your team is. <span style="color: var(--ink-3);">Measure it.</span></h1>
+  </div>
+
+  <div class="flow">
+    <div class="step">
+      <div class="ord">Step 01</div>
+      <div class="nm">Survey.</div>
+      <p class="desc">Anonymous baseline of your team's current state. Five minutes. Eleven question groups.</p>
+    </div>
+    <div class="arrow">
+      <svg viewBox="0 0 60 24" fill="none"><path d="M2 12 L56 12 M48 4 L56 12 L48 20" stroke="#5b27a8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="step">
+      <div class="ord">Step 02</div>
+      <div class="nm">Score.</div>
+      <p class="desc">A 3-pillar diagnostic radar — Conceptual, Operational, Governance — org-wide and by department.</p>
+    </div>
+    <div class="arrow">
+      <svg viewBox="0 0 60 24" fill="none"><path d="M2 12 L56 12 M48 4 L56 12 L48 20" stroke="#5b27a8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="step">
+      <div class="ord">Step 03</div>
+      <div class="nm">Pilot.</div>
+      <p class="desc">Targeted rollout based on what the survey actually told you — not what you assumed.</p>
+    </div>
+  </div>
+
+  <div class="pillars">
+    <div>
+      <div class="ph">Conceptual</div>
+      <p class="pd">Do they understand the AI landscape — models, vendors, what's possible right now?</p>
+    </div>
+    <div>
+      <div class="ph">Operational</div>
+      <p class="pd">Can they actually use the tools? Prompting, files, agents, workflows?</p>
+    </div>
+    <div>
+      <div class="ph">Governance</div>
+      <p class="pd">Do they understand the risk profile + the rules for responsible use?</p>
+    </div>
+  </div>
+
+  <p class="why">"Don't deploy AI to a team you haven't measured. You'll roll out to your weakest users and skip your strongest."</p>
+
+  <div class="footnote">7 min — Competency section</div>
+</section>
+
+<!-- ============ 11. RUDI Survey + Spider chart ============ -->
+<section class="s-rudi" data-screen-label="11 RUDI Survey + Dashboard">
+  <div class="crumb"><span class="dot"></span><span>03 — Competency · The diagnostic</span></div>
+  <div class="pgnum">11 / 16</div>
+
+  <div class="left">
+    <div style="padding-top: 60px;">
+      <div class="eyebrow" style="margin-bottom: 16px;">Live demo</div>
+      <h1 class="h2">The diagnostic + the dashboard.<br/><span style="color: var(--purple);">Live.</span></h1>
+    </div>
+
+    <div class="survey-card">
+      <div class="lead">
+        <span class="badge">Survey</span>
+        <span style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3);">RUDI · Responsible Use of Digital Intelligence</span>
+      </div>
+      <h3>Anonymous · ~5 min · 11 question groups</h3>
+      <span class="url">tally.so/r/0Qo4rN</span>
+      <div style="height: 1px; background: var(--rule);"></div>
+      <div style="font-family: 'Geist Mono', monospace; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3);">Captures</div>
+      <div class="captures">
+        <span>Tools tried</span><span>Agent experience</span><span>Behavior tier 1–7</span>
+        <span>Frequency</span><span>Comfort 0–10</span><span>Concerns</span>
+        <span>60-day priorities</span><span>Learning prefs</span>
+      </div>
+    </div>
+
+    <div class="announce">
+      <span class="marker">Heads up →</span>
+      <p>You'll get the survey AND the dashboard skill in the follow-up email.</p>
+    </div>
+  </div>
+
+  <div class="right">
+    <div style="padding-top: 60px;"></div>
+    <div class="chart-card">
+      <div class="head">
+        <span class="ti">Org-wide diagnostic</span>
+        <span class="sc">N=16 · Sample</span>
+      </div>
+      <div class="chart">
+        <svg viewBox="-200 -200 400 400" width="100%" height="100%" style="max-height: 380px;">
+          <!-- Spider grid -->
+          <g fill="none" stroke="#e8e3da" stroke-width="1">
+            <polygon points="0,-160 138.6,80 -138.6,80"/>
+            <polygon points="0,-120 103.9,60 -103.9,60"/>
+            <polygon points="0,-80 69.3,40 -69.3,40"/>
+            <polygon points="0,-40 34.6,20 -34.6,20"/>
+          </g>
+          <!-- Axes -->
+          <g stroke="#d8d2c5" stroke-width="1">
+            <line x1="0" y1="0" x2="0" y2="-160"/>
+            <line x1="0" y1="0" x2="138.6" y2="80"/>
+            <line x1="0" y1="0" x2="-138.6" y2="80"/>
+          </g>
+          <!-- Data polygon -->
+          <polygon points="0,-104 90.0,52 -82.0,47.4" fill="#5b27a8" fill-opacity="0.18" stroke="#5b27a8" stroke-width="2.5" stroke-linejoin="round"/>
+          <!-- Data points -->
+          <g fill="#5b27a8">
+            <circle cx="0" cy="-104" r="5"/>
+            <circle cx="90.0" cy="52" r="5"/>
+            <circle cx="-82.0" cy="47.4" r="5"/>
+          </g>
+          <!-- Labels -->
+          <g font-family="Geist Mono, monospace" font-size="11" fill="#4a4254" text-anchor="middle" letter-spacing="0.05em">
+            <text x="0" y="-178">CONCEPTUAL · 65</text>
+            <text x="160" y="100">OPERATIONAL · 52</text>
+            <text x="-160" y="100">GOVERNANCE · 47</text>
+          </g>
+          <!-- Scale ticks -->
+          <g font-family="Geist Mono, monospace" font-size="9" fill="#8c8597" text-anchor="end">
+            <text x="-4" y="-156">100</text>
+            <text x="-4" y="-76">50</text>
+            <text x="-4" y="-36">25</text>
+          </g>
+        </svg>
+      </div>
+      <div class="legend">
+        <div><span class="lbl">Conceptual</span><span class="val">65<small>/100</small></span></div>
+        <div><span class="lbl">Operational</span><span class="val">52<small>/100</small></span></div>
+        <div><span class="lbl">Governance</span><span class="val" style="color: var(--red);">47<small>/100</small></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">4 min live demo — Survey · Dashboard · 2 recommendations</div>
+</section>
+
+<!-- ============ 12. 3 Pilot outputs ============ -->
+<section class="s-pilots" data-screen-label="12 The 3 Pilot Outputs">
+  <div class="crumb"><span class="dot"></span><span>03 — Competency · Outputs</span></div>
+  <div class="pgnum">12 / 16</div>
+
+  <div style="padding-top: 60px;">
+    <div class="eyebrow" style="margin-bottom: 16px;">After the survey</div>
+    <h1 class="h1">You build three things —<br/><span style="color: var(--ink-3);">in this order.</span></h1>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="ord">
+        <span class="n">→ 01</span>
+        <span class="step">Library</span>
+      </div>
+      <div class="nm">Prompt Library.</div>
+      <p class="desc">Standardize prompts across the team so people stop reinventing every chat. Hosted where your team already lives — SharePoint, Notion, Drive.</p>
+      <div style="padding: 14px 16px; background: var(--purple-soft); border-radius: 6px; font-size: 14px; color: var(--purple-deep); font-family: 'Geist Mono', monospace; letter-spacing: 0.04em;">Built using a framework — we'll show CRAFT next.</div>
+      <div class="why">First — highest leverage, lowest effort.</div>
+    </div>
+
+    <div class="card">
+      <div class="ord">
+        <span class="n">→ 02</span>
+        <span class="step">Pilots</span>
+      </div>
+      <div class="nm">Power-user Pilots.</div>
+      <p class="desc">Don't roll out to everyone. Start with people the survey shows are at tier 5+ on the operational ladder. Power users → wins → pull, not push.</p>
+      <div style="padding: 14px 16px; background: var(--purple-soft); border-radius: 6px; font-size: 14px; color: var(--purple-deep); font-family: 'Geist Mono', monospace; letter-spacing: 0.04em;">Needs the survey + library to be ready.</div>
+      <div class="why">Second — pulls from survey + library.</div>
+    </div>
+
+    <div class="card">
+      <div class="ord">
+        <span class="n">→ 03</span>
+        <span class="step">Hub</span>
+      </div>
+      <div class="nm">Resource Center.</div>
+      <p class="desc">Central hub: prompt library + skill library + governance one-pager + recorded demos. Becomes the team's source of truth as you scale.</p>
+      <div style="padding: 14px 16px; background: var(--purple-soft); border-radius: 6px; font-size: 14px; color: var(--purple-deep); font-family: 'Geist Mono', monospace; letter-spacing: 0.04em;">Emerges naturally once you have 2–3 wins.</div>
+      <div class="why">Third — capstones the rollout.</div>
+    </div>
+  </div>
+
+  <p class="takeaway">"Survey first. Then library. Then pilots. Then center. Don't skip steps."</p>
+
+  <div class="footnote">2 min — Walk the three cards</div>
+</section>
+
+<!-- ============ 13. CRAFT framework ============ -->
+<section class="s-craft" data-screen-label="13 CRAFT Framework">
+  <div class="crumb"><span class="dot"></span><span>03 — Competency · The framework</span></div>
+  <div class="pgnum">13 / 16</div>
+
+  <div style="padding-top: 60px;">
+    <div class="eyebrow" style="margin-bottom: 16px;">Prompt Library — CRAFT framework</div>
+    <h1 class="h2" style="max-width: 1500px;">How to write a prompt that gets the same answer every time.</h1>
+  </div>
+
+  <div class="grid">
+    <div class="row">
+      <div class="letter">C</div>
+      <div class="word">Context.</div>
+      <div class="ex">
+        <p class="desc">The situation, the audience, what you're working on.</p>
+        <p class="quote">"I'm a people manager prepping for a 1:1 with a direct report who missed a deadline."</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="letter">R</div>
+      <div class="word">Role.</div>
+      <div class="ex">
+        <p class="desc">Who AI should act as.</p>
+        <p class="quote">"Act as an experienced HR coach who specializes in performance conversations."</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="letter">A</div>
+      <div class="word">Action.</div>
+      <div class="ex">
+        <p class="desc">What specifically you want it to do.</p>
+        <p class="quote">"Draft 3 opening questions for the conversation."</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="letter">F</div>
+      <div class="word">Format.</div>
+      <div class="ex">
+        <p class="desc">How the output should look.</p>
+        <p class="quote">"Bulleted list. Each question ≤ 15 words. Numbered 1–3."</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="letter">T</div>
+      <div class="word">Tone.</div>
+      <div class="ex">
+        <p class="desc">The voice / register.</p>
+        <p class="quote">"Curious and supportive — not accusatory."</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="why-row">
+    <div class="lab">Why a library beats one-off prompts</div>
+    <p>Same input → same output, every time. New hires inherit the team's accumulated wisdom on day one. Prompts become an asset that compounds — bad ones get replaced, good ones get reused.</p>
+  </div>
+
+  <div class="footnote">1 min — Show one CRAFT prompt running live</div>
+</section>
+
+<!-- ============ 14. Monday Action ============ -->
+<section class="s-monday" data-screen-label="14 Monday Action">
+  <div class="crumb"><span class="dot"></span><span>Close · This week</span></div>
+  <div class="pgnum">14 / 16</div>
+
+  <div class="left">
+    <div style="padding-top: 60px;">
+      <div class="eyebrow" style="margin-bottom: 16px;">Close — Monday action</div>
+      <h1 class="h1" style="font-size: 72px;">Three things<br/>to do this week.</h1>
+    </div>
+
+    <div class="actions">
+      <div class="action">
+        <span class="n">01</span>
+        <div class="body">
+          <h4>Send the survey.</h4>
+          <p>Link in the follow-up email. Goal: 80%+ response rate in 5 business days.</p>
+        </div>
+      </div>
+      <div class="action">
+        <span class="n">02</span>
+        <div class="body">
+          <h4>Pick one pilot.</h4>
+          <p>A workflow 2–3 people on your team are doing manually today — research, summaries, doc review, comms drafts.</p>
+        </div>
+      </div>
+      <div class="action">
+        <span class="n">03</span>
+        <div class="body">
+          <h4>Start the resource center.</h4>
+          <p>Even one shared doc with 5 prompts is a start. Don't wait for perfect.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <span class="label">In your inbox</span>
+    <h3>Four deliverables — follow-up email.</h3>
+    <div class="deliv">
+      <div class="item">
+        <span class="n">01</span>
+        <div class="nm">RUDI Survey Template<small>Tally link · clone-able</small></div>
+      </div>
+      <div class="item">
+        <span class="n">02</span>
+        <div class="nm">Survey Dashboard Skill<small>Claude Project + Custom GPT</small></div>
+      </div>
+      <div class="item">
+        <span class="n">03</span>
+        <div class="nm">CRAFT Prompt Library<small>5 starter prompts for people leaders</small></div>
+      </div>
+      <div class="item">
+        <span class="n">04</span>
+        <div class="nm">Compliance one-pager<small>Traffic light + scrutiny reference</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footnote">1 min recap — Hand off to Q&A</div>
+</section>
+
+<!-- ============ 15. Q&A ============ -->
+<section class="s-qa" data-screen-label="15 Q&A">
+  <div class="crumb"><span class="dot"></span><span>Q&amp;A · Facilitated</span></div>
+  <div class="pgnum">15 / 16</div>
+
+  <div style="padding-top: 100px;">
+    <span class="label">Questions?</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 80px;">
+    <div class="qmark">?</div>
+    <h2>Let's<br/>talk it<br/>through.</h2>
+  </div>
+
+  <div class="meta">
+    <span class="item">4:35 — 4:50 PM</span>
+    <span class="dot"></span>
+    <span class="item">Facilitated by AfroTech</span>
+    <span class="dot"></span>
+    <span class="item">15 minutes</span>
+  </div>
+
+  <div class="footmark">AFROTECH · AI EDGE</div>
+</section>
+
+<!-- ============ 16. CTA ============ -->
+<section class="s-cta" data-screen-label="16 1-Day Training CTA">
+  <div class="crumb"><span class="dot"></span><span>Next Step · 1-Day Intensive</span></div>
+  <div class="pgnum">16 / 16</div>
+
+  <div class="body-wrap">
+    <div class="left">
+      <span class="eyebrow">AfroTech 1-Day Intensive</span>
+      <h1>Take the team <em>further.</em></h1>
+      <p class="lede">A full-day, hands-on training for People Leaders ready to roll out AI across their org — survey, library, pilot, governance. End the day with a written 90-day plan.</p>
+      <span class="cta-btn">Register your team →</span>
+    </div>
+
+    <div class="right">
+      <span class="label">What you'll leave with</span>
+      <h3>Four working artifacts.</h3>
+      <div class="modules">
+        <div class="mod"><span class="n">01</span><span class="nm">Org-wide RUDI baseline + radar chart</span></div>
+        <div class="mod"><span class="n">02</span><span class="nm">15-prompt CRAFT library scoped to your team</span></div>
+        <div class="mod"><span class="n">03</span><span class="nm">Compliance + scrutiny one-pager — printable</span></div>
+        <div class="mod"><span class="n">04</span><span class="nm">90-day pilot plan with named power users</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footmark">AFROTECH · AI EDGE · SESSION 02</div>
+</section>
+
+</deck-stage>
+
+<!-- ============ EDIT MODE TOOLBAR ============ -->
+<style>
+  #edit-toolbar {
+    position: fixed; top: 16px; right: 16px; z-index: 2147483647;
+    background: rgba(20, 16, 29, 0.95); color: white;
+    padding: 10px 14px; border-radius: 10px;
+    font-family: 'Geist Mono', monospace; font-size: 11px;
+    display: flex; gap: 10px; align-items: center;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+    backdrop-filter: blur(8px);
+    letter-spacing: 0.08em;
+  }
+  #edit-toolbar .label { opacity: 0.55; text-transform: uppercase; letter-spacing: 0.18em; padding-right: 4px; }
+  #edit-toolbar button {
+    border: 0; padding: 7px 12px; border-radius: 5px;
+    font-family: inherit; font-size: 10px; cursor: pointer;
+    letter-spacing: 0.14em; text-transform: uppercase; font-weight: 500;
+    transition: opacity 0.15s ease;
+  }
+  #edit-toolbar button:hover { opacity: 0.85; }
+  #edit-toggle { background: #5b27a8; color: white; }
+  #edit-toggle.on { background: #d6eb88; color: #2b0f55; }
+  #edit-save { background: #d6eb88; color: #2b0f55; display: none; }
+  #edit-reset { background: transparent; color: #ff8a8a; border: 1px solid rgba(255,138,138,0.5) !important; display: none; }
+  #edit-status { color: #d6eb88; font-size: 10px; opacity: 0; transition: opacity 0.3s ease; }
+  #edit-status.show { opacity: 1; }
+  body.edit-mode [data-editable]:hover { outline: 1px dashed #5b27a8; outline-offset: 4px; cursor: text; }
+  body.edit-mode [data-editable]:focus { outline: 2px solid #5b27a8; outline-offset: 4px; background: rgba(91,39,168,0.04); }
+</style>
+
+<div id="edit-toolbar">
+  <span class="label">Deck Editor</span>
+  <button id="edit-toggle">Edit Mode</button>
+  <button id="edit-save">Download HTML</button>
+  <button id="edit-reset">Reset</button>
+  <span id="edit-status"></span>
+</div>
+
+<script>
+(function() {
+  const STORAGE_KEY = 'rudi-deck-edits-v2';
+
+  // Smart text-leaf detector: find every visible element whose direct content
+  // is text (or simple inline formatting) — i.e., the actual text-bearing leaves
+  // of the deck. Skip layout containers, SVG internals, and the editor toolbar.
+  const INLINE_TAGS = new Set(['SPAN','B','I','EM','STRONG','BR','A','SMALL','CODE','CITE','SUP','SUB','MARK','U']);
+  const SKIP_INSIDE = new Set(['SVG','SCRIPT','STYLE']);
+
+  function isTextLeaf(el) {
+    // Skip the toolbar itself
+    if (el.closest('#edit-toolbar')) return false;
+    // Skip anything inside SVG / script / style
+    let p = el.parentElement;
+    while (p) {
+      if (SKIP_INSIDE.has(p.tagName)) return false;
+      p = p.parentElement;
+    }
+    // Must contain non-empty text directly
+    if (!el.textContent || !el.textContent.trim()) return false;
+    // Element is a leaf if all children are text nodes or inline elements
+    // that don't themselves contain block children
+    const kids = Array.from(el.childNodes);
+    let hasText = false;
+    for (const k of kids) {
+      if (k.nodeType === 3) { // text node
+        if (k.textContent.trim()) hasText = true;
+        continue;
+      }
+      if (k.nodeType !== 1) return false; // unexpected node type
+      if (!INLINE_TAGS.has(k.tagName)) return false; // block child = not a leaf
+      // Inline child must not contain any block descendants either
+      if (k.querySelector('div, section, article, p, h1, h2, h3, h4, h5, h6, ul, ol, li, table')) return false;
+      if (k.textContent.trim()) hasText = true;
+    }
+    return hasText;
+  }
+
+  function elements() {
+    const all = document.querySelectorAll('deck-stage *');
+    return Array.from(all).filter(isTextLeaf);
+  }
+
+  // Stable IDs so we can map edits back after refresh.
+  function ensureIds() {
+    elements().forEach((el, i) => {
+      if (!el.dataset.edId) el.dataset.edId = 'ed-' + i;
+      el.setAttribute('data-editable', '');
+    });
+  }
+  ensureIds();
+
+  // Restore prior edits from localStorage on load.
+  function restore() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return 0;
+      const edits = JSON.parse(raw);
+      let restored = 0;
+      Object.entries(edits).forEach(([id, html]) => {
+        const el = document.querySelector('[data-ed-id="' + id + '"]');
+        if (el && el.innerHTML !== html) {
+          el.innerHTML = html;
+          restored++;
+        }
+      });
+      return restored;
+    } catch (e) { return 0; }
+  }
+
+  function save() {
+    const edits = {};
+    elements().forEach(el => {
+      if (el.dataset.edId) edits[el.dataset.edId] = el.innerHTML;
+    });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(edits));
+    } catch (e) { console.warn('localStorage save failed', e); }
+  }
+
+  const restoredCount = restore();
+  if (restoredCount > 0) console.log('Restored ' + restoredCount + ' saved edits from localStorage.');
+
+  // ===== Toolbar wiring =====
+  const toggleBtn = document.getElementById('edit-toggle');
+  const saveBtn = document.getElementById('edit-save');
+  const resetBtn = document.getElementById('edit-reset');
+  const status = document.getElementById('edit-status');
+
+  function flash(msg) {
+    status.textContent = msg;
+    status.classList.add('show');
+    setTimeout(() => status.classList.remove('show'), 1800);
+  }
+
+  function setEditMode(on) {
+    document.body.classList.toggle('edit-mode', on);
+    elements().forEach(el => {
+      if (on) el.setAttribute('contenteditable', 'true');
+      else el.removeAttribute('contenteditable');
+    });
+    toggleBtn.classList.toggle('on', on);
+    toggleBtn.textContent = on ? 'Editing — Click to Stop' : 'Edit Mode';
+    saveBtn.style.display = on ? 'inline-block' : 'none';
+    resetBtn.style.display = on ? 'inline-block' : 'none';
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    const on = !document.body.classList.contains('edit-mode');
+    setEditMode(on);
+    if (on) flash('Click any text to edit');
+  });
+
+  // Auto-save on blur
+  document.addEventListener('blur', e => {
+    if (e.target.dataset && e.target.dataset.edId) {
+      save();
+      flash('Saved locally');
+    }
+  }, true);
+
+  resetBtn.addEventListener('click', () => {
+    if (!confirm('Reset all edits? This will reload the original deck.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  });
+
+  saveBtn.addEventListener('click', () => {
+    // Snapshot the current document, strip the editor toolbar + script, download.
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('#edit-toolbar, [data-editor-script]').forEach(n => n.remove());
+    // Strip contenteditable + edit attrs from the saved version
+    clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+    clone.querySelectorAll('[data-editable]').forEach(el => el.removeAttribute('data-editable'));
+    // Keep data-ed-id so future re-edit can re-anchor
+    const html = '<!doctype html>\n' + clone.outerHTML;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'afrotech-ai-edge-session-02-people-leaders.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    flash('Downloaded');
+  });
+
+  // Mark this script so it gets stripped on save
+  document.currentScript && (document.currentScript.dataset.editorScript = '1');
+})();
+</script>
+
+</body>
+</html>
