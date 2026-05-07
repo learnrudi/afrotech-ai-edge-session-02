@@ -4,7 +4,7 @@ Live workshop deck delivered May 20, 2026 by Brandon Z. Hoff (RUDI).
 
 ## Quick links
 
-- **View the deck (live)**: [GitHub Pages URL — set after first push]
+- **View the deck (live)**: https://learnrudi.github.io/afrotech-ai-edge-session-02/afrotech-ai-edge-session-02-people-leaders.html
 - **Primary file**: [`afrotech-ai-edge-session-02-people-leaders.html`](afrotech-ai-edge-session-02-people-leaders.html)
 - **Slide previews (PNG)**: [`exports/slide-previews/`](exports/slide-previews/)
 
